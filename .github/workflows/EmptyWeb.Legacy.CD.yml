@@ -3,13 +3,18 @@ name: EmptyWeb.Legacy.CD
 on: [push]
 
 jobs:
-  build:
-
+  build-and-deploy:
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
+    
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
+    
     - name: Build with MSBuild
       run: msbuild EmptyWeb.sln -p:Configuration=Release
+    
+    - name: 'Run Azure webapp deploy action using publish profile credentials'
+    - uses: azure/webapps-deploy@v1
+      with:
+        creds: ${{ secrets.azureFlutjeWebAppPublishProfile }}
